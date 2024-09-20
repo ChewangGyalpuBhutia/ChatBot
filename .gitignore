@@ -1,0 +1,46 @@
+# Ignore compiled Python files
+*.pyc
+__pycache__
+**/__pycache__
+__pycache__
+/Chatbot/__pycache__/
+/pycache/*
+
+# Ignore the virtual environment directory
+venv/
+env/
+myenv/
+
+# Ignore local development settings
+*.env
+*.sqlite3
+
+# Ignore static files collected by Django
+/staticfiles/
+
+# Ignore media files uploaded by users
+/media/
+
+# Ignore logs and other runtime data
+*.log
+*.pot
+*.po
+*.mo
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore IDE specific files
+.vscode/
+*.pydevproject
+.idea/
+
+# Ignore pipenv files
+Pipfile
+Pipfile.lock
+
+# Ignore pytest cache
+pytest_cache/
+
+# Ignore any other sensitive or generated files
+*.secret

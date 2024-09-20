@@ -1,0 +1,267 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Demo</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static '/chatbot-style.css' %}"> -->
+    <style>
+        body {
+            height: 100vh;
+            width: 100vw;
+            color: #f9f9f9;
+        }
+
+        .parent-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .side-bar {
+            width: 236px;
+            height: 100vh;
+            background-color: #171717;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .top-bar {
+            height: 32px;
+        }
+
+        .chat-container {
+            width: 100%;
+            height: 100%;
+            background-color: #212121;
+            padding: 12px;
+            position: relative
+        }
+
+        .form-container {
+            /* width: 768px; */
+            /* height: 40px; */
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .input-container {
+            flex: 1;
+            height: 100%;
+        }
+
+        /* .input-style {
+            width: 100%;
+            height: 100%;
+            border: none;
+            color: white;
+            background-color: transparent;
+            padding: 0 12px 0 12px;
+        } */
+        .input-style {
+            width: 666px;
+            border: none;
+            color: white;
+            background-color: transparent;
+            padding: 18px;
+            resize: none;
+        }
+
+        .input-style:focus {
+            outline: none;
+            border-color: transparent;
+        }
+
+        .button-container {
+            width: 60px;
+            height: 27px;
+            margin-right: 6px;
+            background-color: white;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-left: 12px;
+        }
+
+        .button-style {
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 0;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .chat-message-container {
+            /* flex: 1; */
+            overflow-y: auto;
+            padding: 12px 156px;
+            height: 80%;
+        }
+
+        .bottom-container {
+            /* padding: 16px 0 0px 0; */
+            /* background-color: blue */
+        }
+
+        .question-container {
+            /* height: 90px; */
+            width: 100%;
+            color: white;
+            margin-bottom: 3px;
+            text-align: justify;
+        }
+
+        .answer-container {
+            text-align: justify;
+            margin-bottom: 64px;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        .image{
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="parent-container d-flex">
+        <div class="side-bar">
+
+            <div class="image-container">
+                {% load static %}
+                <!-- <img src="{% static 'images.jpeg' %}" alt="My image"> -->
+                <img class="image" src="{% static 'images.jpeg' %}" alt="My image">
+            </div>
+            <div class="top-bar mt-3">
+                <h5 class="text-center">WELCOME</h5>
+            </div>
+        </div>
+        <div class="chat-container">
+            <div class="top-bar">
+                <h5 class="text-center">AI GPT - 1.1</h5>
+            </div>
+
+            <div class="chat-message-container">
+                <div id="q&a" class="mb-5">
+
+                </div>
+                <div id="loading-spinner" class="loading-spinner"></div>
+            </div>
+
+
+
+            <div class="bottom-container d-flex justify-content-center">
+                <form action="" class="form-container d-flex align-items-center" method="post" id="chat-form">
+                    <div class="input-container">
+                        <textarea id="question" class="input-style" rows="1"
+                            placeholder="Ask here about....."></textarea>
+                    </div>
+                    <div class="button-container">
+                        <button class="button-style" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chatForm = document.getElementById('chat-form');
+            const questionInput = document.getElementById('question');
+            const submitButton = chatForm.querySelector('button[type="submit"]');
+            const loadingSpinner = document.getElementById('loading-spinner');
+
+            chatForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const question = questionInput.value;
+
+                // Show loading spinner and disable input and button
+                loadingSpinner.style.display = 'inline-block';
+                questionInput.disabled = true;
+                submitButton.disabled = true;
+
+                const chatMessageContainer = document.getElementById('q&a');
+
+                const questionElement = document.createElement('div');
+                questionElement.classList.add('question-container');
+                questionElement.innerHTML = `<p> Question : ${question}</p>`;
+                chatMessageContainer.appendChild(questionElement);
+
+                fetch('/chatbot/api/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ question: question })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+
+
+                        const answerElement = document.createElement('div');
+                        answerElement.classList.add('answer-container');
+                        answerElement.innerHTML = `<p> Response : ${data.answer}</p>`;
+                        chatMessageContainer.appendChild(answerElement);
+
+                        chatMessageContainer.scrollTop = chatMessageContainer.scrollHeight;
+
+                        // Clear the input field after submission
+                        questionInput.value = '';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    })
+                    .finally(() => {
+                        // Hide loading spinner and enable input and button
+                        loadingSpinner.style.display = 'none';
+                        questionInput.disabled = false;
+                        submitButton.disabled = false;
+                    });
+            });
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
+
+<!-- <div class="bottom-container d-flex justify-content-center">
+                <form action="" class="form-container d-flex align-items-center" method="post" id="chat-form">
+                    <div class="input-container">
+                        <textarea id="question" class="input-style" rows="1" placeholder="Ask here about....."></textarea>
+                    </div>
+                    <div class="button-container">
+                        <button class="button-style" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div> -->
