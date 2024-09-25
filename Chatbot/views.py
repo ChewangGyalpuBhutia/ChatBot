@@ -34,7 +34,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # class ChatBotAPI(APIView):
 #     def post(self, request):
 
-#         os.environ["OPENAI_API_KEY"] = "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"
+#         os.environ["OPENAI_API_KEY"] = ""
 
 #         query = request.data.get('question')
 #         if len(sys.argv) > 1:

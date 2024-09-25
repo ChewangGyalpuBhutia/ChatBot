@@ -44,3 +44,4 @@ pytest_cache/
 
 # Ignore any other sensitive or generated files
 *.secret
+.env
