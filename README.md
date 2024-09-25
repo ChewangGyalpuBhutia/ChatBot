@@ -1,6 +1,10 @@
 # Culture: Django Chatbot Application
 
-This is a Django-based chatbot application.
+This is a Django-based chatbot application!
+
+![Screenshot 2024-09-25 231945](https://github.com/user-attachments/assets/34a90e3d-46bd-45fc-95ba-0d4c27dab45d)
+
+![Screenshot (74)](https://github.com/user-attachments/assets/5b1a371f-dc73-43f5-9fc6-fa21b38dcc40)
 
 ## Installation
 
@@ -24,12 +28,12 @@ This is a Django-based chatbot application.
     pip install -r requirements.txt
     ```
 
-4. Create a .env file in the Culture directory and add your OpenAI API key:
+4. **Create a .env file in the Culture directory and add your OpenAI API key:**
 
-     ```bash
+    ```bash
     OPENAI_API_KEY="your_openai_api_key_here"
     ```
-     
+
 5. **Run the development server:**
 
     ```bash
@@ -41,3 +45,4 @@ This is a Django-based chatbot application.
     ```
     http://127.0.0.1:8000/chatbot/homepage/
     ```
+
